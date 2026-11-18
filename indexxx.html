@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отель "Золотая звезда"</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f4f7fc; color: #1a2a3a; min-height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; }
+        .hidden { display: none !important; }
+
+        /* ===== HEADER ===== */
+        header { background: linear-gradient(135deg, #1e3c5c, #2a5a7a); color: #fff; padding: 20px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .logo h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+        .logo span { font-weight: 300; font-size: 16px; opacity: 0.85; display: block; }
+        .nav-links { display: flex; gap: 25px; font-size: 17px; font-weight: 500; align-items: center; }
+        .nav-links a { padding: 8px 0; border-bottom: 2px solid transparent; transition: 0.2s; cursor: pointer; }
+        .nav-links a:hover, .nav-links a.active { border-bottom-color: #ffd966; color: #ffd966; }
+
+        main { flex: 1; padding: 40px 0; }
+
+        /* ===== FOOTER ===== */
+        footer { background: #0f1f2e; color: #cfdfee; padding: 30px 0; margin-top: 20px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; }
+        .footer-grid h4 { color: #fff; margin-bottom: 10px; font-size: 16px; }
+        .footer-grid p { font-size: 14px; line-height: 1.7; opacity: 0.85; }
+
+        /* ===== HOME ===== */
+        .hero { background: linear-gradient(135deg, #d4e4f7, #b8d0e8); padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; }
+        .hero h2 { font-size: 36px; color: #0f2a44; }
+        .hero p { font-size: 20px; margin-top: 12px; color: #1f3d5c; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; margin-bottom: 40px; }
+        .feature-card { background: #fff; padding: 28px 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; transition: 0.2s; border: 1px solid #e2ecf5; }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .feature-card h3 { font-size: 22px; color: #1e3c5c; margin-bottom: 8px; }
+        .section-title { font-size: 28px; margin-bottom: 20px; color: #1e3c5c; }
+
+        /* ===== CATALOG ===== */
+        .filter-section { background: #fff; padding: 25px 30px; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 35px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px; border: 1px solid #dce8f2; }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1 1 150px; }
+        .filter-group label { font-size: 14px; font-weight: 600; color: #1e3c5c; }
+        .filter-group select, .filter-group input { padding: 10px 14px; border: 1px solid #cbdbe9; border-radius: 10px; font-size: 15px; background: #fafcff; transition: 0.2s; }
+        .filter-group select:focus, .filter-group input:focus { border-color: #1e3c5c; outline: none; box-shadow: 0 0 0 3px rgba(30,60,92,0.15); }
+        .filter-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { padding: 10px 28px; border: none; border-radius: 30px; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.2s; background: #e2ecf5; color: #1a2a3a; }
+        .btn-primary { background: #1e3c5c; color: #fff; }
+        .btn-primary:hover { background: #2a5a7a; transform: scale(1.02); }
+        .btn-outline { background: transparent; border: 2px solid #1e3c5c; color: #1e3c5c; }
+        .btn-outline:hover { background: #1e3c5c; color: #fff; }
+        .btn-success { background: #1f8b4c; color: #fff; }
+        .btn-success:hover { background: #167a3e; }
+        .btn-danger { background: #c0392b; color: #fff; }
+        .btn-danger:hover { background: #a93226; }
+        .btn-warn { background: #b8860b; color: #fff; }
+        .btn-warn:hover { background: #9a7009; }
+
+        .rooms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .room-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.05); border: 1px solid #e2ecf5; transition: 0.25s; display: flex; flex-direction: column; }
+        .room-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+        .room-card img { width: 100%; height: 190px; object-fit: cover; background: #d4e0ea; }
+        .room-body { padding: 20px 22px 25px; flex: 1; display: flex; flex-direction: column; }
+        .room-body h3 { font-size: 20px; color: #1e3c5c; margin-bottom: 4px; }
+        .room-body .category-badge { display: inline-block; background: #dce8f2; padding: 2px 16px; border-radius: 30px; font-size: 13px; font-weight: 600; color: #1a3a5a; margin-bottom: 10px; align-self: flex-start; }
+        .room-body .price { font-size: 22px; font-weight: 700; color: #0f2a44; margin: 6px 0 10px; }
+        .room-body .price small { font-weight: 400; font-size: 14px; color: #5f7d9a; }
+        .room-body .chars { font-size: 14px; color: #2f4d6a; margin-bottom: 14px; line-height: 1.6; flex: 1; }
+        .room-body .chars span { background: #f0f6fe; padding: 2px 12px; border-radius: 30px; margin-right: 5px; display: inline-block; margin-bottom: 4px; font-size: 13px; }
+        .room-body .btn { width: 100%; text-align: center; margin-top: 8px; }
+
+        /* ===== BOOKING & LOGIN ===== */
+        .auth-form, .booking-form { background: #fff; max-width: 720px; margin: 0 auto; padding: 40px 45px; border-radius: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); border: 1px solid #dce8f2; }
+        .auth-form { max-width: 450px; text-align: center; }
+        .auth-form h2, .booking-form h2 { font-size: 28px; color: #1e3c5c; margin-bottom: 25px; }
+        .selected-room-info { background: #fff8e1; border: 1px solid #ffd966; border-radius: 14px; padding: 16px 20px; margin-bottom: 25px; font-size: 16px; color: #6b5200; display: none; }
+        .selected-room-info b { color: #1e3c5c; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 5px; color: #1a3a5a; }
+        .form-group label .required { color: #c0392b; margin-left: 4px; }
+        .form-group input { width: 100%; padding: 12px 16px; border: 1px solid #cbdbe9; border-radius: 12px; font-size: 16px; background: #fafcff; transition: 0.2s; }
+        .form-group input:focus { border-color: #1e3c5c; outline: none; box-shadow: 0 0 0 4px rgba(30,60,92,0.1); }
+        .form-group .error-msg { color: #c0392b; font-size: 13px; margin-top: 4px; display: none; }
+        .form-group.error input { border-color: #c0392b; background: #fff6f6; }
+        .form-group.error .error-msg { display: block; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .booking-form .btn, .auth-form .btn { width: 100%; padding: 14px; font-size: 18px; margin-top: 10px; }
+        .success-msg { padding: 18px 24px; border-radius: 14px; text-align: center; font-weight: 600; font-size: 18px; display: none; margin-top: 20px; }
+
+        /* ===== CALENDAR ===== */
+        .calendar-wrap { background: #fafcff; border: 1px solid #dce8f2; border-radius: 16px; padding: 18px; margin-bottom: 25px; }
+        .calendar-wrap h3 { font-size: 16px; color: #1e3c5c; margin-bottom: 12px; text-align: center; }
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cal-header b { font-size: 17px; color: #1e3c5c; text-transform: capitalize; }
+        .cal-nav { background: #e2ecf5; border: none; width: 34px; height: 34px; border-radius: 10px; font-size: 18px; cursor: pointer; transition: 0.2s; }
+        .cal-nav:hover { background: #1e3c5c; color: #fff; }
+        .cal-weekdays, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .cal-weekdays span { text-align: center; font-size: 12px; font-weight: 700; color: #5f7d9a; padding: 4px 0; }
+        .cal-day { text-align: center; padding: 8px 0; border-radius: 8px; font-size: 14px; cursor: pointer; background: #fff; border: 1px solid #e2ecf5; transition: 0.15s; user-select: none; }
+        .cal-day:hover:not(.disabled):not(.empty) { background: #d4e4f7; }
+        .cal-day.empty { background: transparent; border: none; cursor: default; }
+        .cal-day.past { background: #eef2f6; color: #b0bec9; text-decoration: line-through; cursor: not-allowed; }
+        .cal-day.booked { background: #f8d7da; color: #a94442; text-decoration: line-through; cursor: not-allowed; font-weight: 600; }
+        .cal-day.today { outline: 2px solid #ffd966; }
+        .cal-day.selected { background: #1e3c5c; color: #fff; font-weight: 700; }
+        .cal-day.in-range { background: #d4e4f7; }
+        .cal-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; font-size: 13px; color: #2f4d6a; }
+        .cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .cal-legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+        .cal-hint { text-align: center; font-size: 13px; color: #5f7d9a; margin-bottom: 10px; }
+
+        /* ===== ADMIN ===== */
+        .admin-container { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); border: 1px solid #e2ecf5; overflow-x: auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .admin-table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        .admin-table th, .admin-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2ecf5; font-size: 14px; }
+        .admin-table th { background: #f0f6fe; color: #1e3c5c; font-weight: 600; }
+        .admin-table tr:hover { background: #fafcff; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .status-новая { background: #fff3cd; color: #856404; }
+        .status-одобрена { background: #d4edda; color: #0f5c3a; }
+        .status-отменена { background: #f8d7da; color: #721c24; }
+        .btn-sm { padding: 6px 14px; font-size: 13px; margin: 2px; }
+
+        @media (max-width: 700px) {
+            .header-inner { flex-direction: column; align-items: flex-start; }
+            .nav-links { gap: 18px; flex-wrap: wrap; }
+            .filter-section { flex-direction: column; align-items: stretch; }
+            .form-row { grid-template-columns: 1fr; }
+            .booking-form, .auth-form { padding: 25px 20px; }
+            .hero { padding: 35px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container header-inner">
+        <div class="logo">
+            <h1>🏨 Золотая звезда</h1>
+            <span>Комфорт и уют в центре города</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="active" data-page="home">Главная</a>
+            <a href="#" data-page="catalog">Каталог</a>
+            <span id="guest-nav"><a href="#" data-page="login">Вход</a></span>
+            <span id="admin-nav" class="hidden"><a href="#" data-page="admin">Админ-панель</a></span>
+            <span id="logout-nav" class="hidden"><a href="#" id="logoutBtn">Выйти</a></span>
+        </nav>
+    </div>
+</header>
+
+<main class="container" id="app">
+
+    <!-- HOME -->
+    <section id="page-home">
+        <div class="hero">
+            <h2>Добро пожаловать в отель «Золотая звезда»</h2>
+            <p>Идеальное место для отдыха и деловых встреч</p>
+        </div>
+        <div class="features">
+            <div class="feature-card"><h3>⭐ 4 звезды</h3><p>Высокий уровень сервиса</p></div>
+            <div class="feature-card"><h3>🌆 120 номеров</h3><p>Стандарт, студии, люксы</p></div>
+            <div class="feature-card"><h3>📶 Бесплатный Wi-Fi</h3><p>По всему отелю</p></div>
+            <div class="feature-card"><h3>🍽️ Ресторан</h3><p>Завтраки, обеды, ужины</p></div>
+        </div>
+        <h2 class="section-title">Номера из каталога</h2>
+        <div id="homeRoomsContainer" class="rooms-grid"></div>
+    </section>
+
+    <!-- CATALOG -->
+    <section id="page-catalog" style="display:none;">
+        <h2 class="section-title">Каталог номеров</h2>
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Категория</label>
+                <select id="filterCategory">
+                    <option value="all">Все</option>
+                    <option value="Стандарт">Стандарт</option>
+                    <option value="Студия">Студия</option>
+                    <option value="Люкс">Люкс</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Цена от, руб.</label>
+                <input type="number" id="filterPriceFrom" placeholder="0" min="0">
+            </div>
+            <div class="filter-group">
+                <label>Цена до, руб.</label>
+                <input type="number" id="filterPriceTo" placeholder="100000" min="0">
+            </div>
+            <div class="filter-group">
+                <label>Кол-во мест</label>
+                <select id="filterCapacity">
+                    <option value="all">Любое</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-primary" id="applyFilterBtn">Применить</button>
+                <button class="btn btn-outline" id="resetFilterBtn">Сбросить фильтр</button>
+            </div>
+        </div>
+        <div id="roomsContainer" class="rooms-grid"></div>
+    </section>
+
+    <!-- BOOKING -->
+    <section id="page-booking" style="display:none;">
+        <div class="booking-form">
+            <h2>Бронирование номера</h2>
+            <div id="selectedRoomInfo" class="selected-room-info"></div>
+
+            <!-- ===== КАЛЕНДАРЬ ===== -->
+            <div class="calendar-wrap">
+                <h3>📅 Календарь занятости номера</h3>
+                <div class="cal-hint">Красные (зачёркнутые) даты — номер уже забронирован (заявка одобрена).<br>Серые даты — прошедшие. Выберите кликом дату заезда, затем дату выезда.</div>
+                <div class="cal-header">
+                    <button class="cal-nav" id="calPrev">‹</button>
+                    <b id="calTitle"></b>
+                    <button class="cal-nav" id="calNext">›</button>
+                </div>
+                <div class="cal-weekdays">
+                    <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+                <div class="cal-legend">
+                    <span><i style="background:#fff;border:1px solid #e2ecf5;"></i> свободно</span>
+                    <span><i style="background:#f8d7da;"></i> занято (одобрено)</span>
+                    <span><i style="background:#eef2f6;"></i> прошедшая дата</span>
+                    <span><i style="background:#1e3c5c;"></i> выбрано</span>
+                    <span><i style="background:#d4e4f7;"></i> диапазон</span>
+                </div>
+            </div>
+
+            <form id="bookingForm" novalidate>
+                <div class="form-row">
+                    <div class="form-group" id="nameGroup">
+                        <label>Имя <span class="required">*</span></label>
+                        <input type="text" id="bookingName" placeholder="Иван">
+                        <div class="error-msg">Только кириллица, пробелы, точки и тире</div>
+                    </div>
+                    <div class="form-group" id="surnameGroup">
+                        <label>Фамилия <span class="required">*</span></label>
+                        <input type="text" id="bookingSurname" placeholder="Петров">
+                        <div class="error-msg">Только кириллица, пробелы, точки и тире</div>
+                    </div>
+                </div>
+                <div class="form-group" id="phoneGroup">
+                    <label>Телефон <span class="required">*</span></label>
+                    <input type="tel" id="bookingPhone" placeholder="+7(999)123-45-67">
+                    <div class="error-msg">Формат: +7(ХХХ)ХХХ-ХХ-ХХ</div>
+                </div>
+                <div class="form-group" id="emailGroup">
+                    <label>E-mail <span class="required">*</span></label>
+                    <input type="email" id="bookingEmail" placeholder="example@mail.ru">
+                    <div class="error-msg">Введите корректный e-mail</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" id="checkinGroup">
+                        <label>Дата заезда <span class="required">*</span></label>
+                        <input type="text" id="bookingCheckin" placeholder="ДД.ММ.ГГГГ">
+                        <div class="error-msg">Формат ДД.ММ.ГГГГ</div>
+                    </div>
+                    <div class="form-group" id="checkoutGroup">
+                        <label>Дата выезда <span class="required">*</span></label>
+                        <input type="text" id="bookingCheckout" placeholder="ДД.ММ.ГГГГ">
+                        <div class="error-msg">Формат ДД.ММ.ГГГГ</div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Отправить заявку</button>
+            </form>
+            <div id="successMessage" class="success-msg"></div>
+        </div>
+    </section>
+
+    <!-- LOGIN -->
+    <section id="page-login" style="display:none;">
+        <div class="auth-form">
+            <h2>Вход в систему</h2>
+            <div id="loginError" style="display:none; margin-bottom: 15px; text-align: center; background: #f8d7da; color:#721c24; padding: 10px; border-radius: 8px; font-size:14px;">Неверный логин или пароль</div>
+            <div class="form-group">
+                <label>Логин</label>
+                <input type="text" id="loginUsername" placeholder="Введите логин">
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="loginPassword" placeholder="Введите пароль">
+            </div>
+            <button class="btn btn-primary" id="btnLoginAdmin">Войти как Администратор</button>
+            <button class="btn btn-outline" id="btnLoginGuest" style="margin-top: 10px;">Войти как Гость</button>
+        </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="page-admin" style="display:none;">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h2 class="section-title" style="margin-bottom:0;">Панель управления — список заявок</h2>
+                <button class="btn btn-outline btn-sm" onclick="clearAllBookings()">🗑️ Очистить все заявки</button>
+            </div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Номер</th>
+                        <th>Клиент</th>
+                        <th>Телефон</th>
+                        <th>Даты</th>
+                        <th>Статус</th>
+                        <th>Создана</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="adminBookingsBody"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container footer-grid">
+        <div><h4>📍 Адрес</h4><p>г. Москва, ул. Тверская, д. 15</p></div>
+        <div><h4>🕒 Режим работы</h4><p>Круглосуточно, без выходных</p></div>
+        <div><h4>📞 Телефон</h4><p>+7 (495) 123-45-67</p></div>
+        <div><h4>✉️ E-mail</h4><p>info@zvezdahotel.ru</p></div>
+    </div>
+</footer>
+
+<script>
+    // ============================================================
+    // БАЗА ДАННЫХ
+    // ============================================================
+    const roomDB = [
+        { id:1, category:'Стандарт', price:4500, capacity:2, area:20, hasTV:true, hasWiFi:true, hasAC:false, img:'https://source.unsplash.com/featured/?hotel,room,standard' },
+        { id:2, category:'Стандарт', price:5200, capacity:2, area:22, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?hotel,room,bed' },
+        { id:3, category:'Студия', price:7800, capacity:3, area:35, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?hotel,studio' },
+        { id:4, category:'Студия', price:8500, capacity:3, area:38, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?apartment,studio' },
+        { id:5, category:'Люкс', price:14500, capacity:4, area:55, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?hotel,luxury,suite' },
+        { id:6, category:'Люкс', price:16200, capacity:4, area:60, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?luxury,hotel,room' },
+        { id:7, category:'Стандарт', price:3900, capacity:1, area:16, hasTV:false, hasWiFi:true, hasAC:false, img:'https://source.unsplash.com/featured/?hotel,single,room' },
+        { id:8, category:'Студия', price:9200, capacity:2, area:40, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?studio,apartment' },
+        { id:9, category:'Люкс', price:18900, capacity:4, area:70, hasTV:true, hasWiFi:true, hasAC:true, img:'https://source.unsplash.com/featured/?luxury,suite,hotel' },
+        { id:10, category:'Стандарт', price:4800, capacity:2, area:21, hasTV:true, hasWiFi:true, hasAC:false, img:'https://source.unsplash.com/featured/?hotel,room,double' },
+    ];
+
+    // ============================================================
+    // ДАННЫЕ ДЛЯ КАЛЕНДАРЯ
+    // ============================================================
+    let calMonth = new Date(); calMonth.setDate(1);   // отображаемый месяц
+    let selCheckin = null;   // Date
+    let selCheckout = null;  // Date
+
+    function todayMid() { const t = new Date(); t.setHours(0,0,0,0); return t; }
+    function dateKey(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+    function toDDMMYYYY(d) { return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear(); }
+
+    // Набор занятых дат для номера (только заявки со статусом «Одобрена»)
+    function getBookedSet(roomId) {
+        const set = new Set();
+        if (roomId == null) return set;
+        JSON.parse(localStorage.getItem('hotel_bookings') || '[]').forEach(b => {
+            if (b.status === 'Одобрена' && b.roomId === roomId) {
+                const ci = parseDate(b.checkin), co = parseDate(b.checkout);
+                if (ci && co) {
+                    const d = new Date(ci);
+                    while (d <= co) { set.add(dateKey(d)); d.setDate(d.getDate() + 1); }
+                }
+            }
+        });
+        return set;
+    }
+
+    function isDateDisabled(d, bookedSet) {
+        const t = todayMid();
+        if (d < t) return 'past';
+        if (bookedSet.has(dateKey(d))) return 'booked';
+        return null;
+    }
+
+    // Есть ли занятые/прошедшие дни в диапазоне [from..to] включительно
+    function rangeHasBlocked(from, to, bookedSet) {
+        const d = new Date(from);
+        while (d <= to) {
+            if (isDateDisabled(d, bookedSet)) return true;
+            d.setDate(d.getDate() + 1);
+        }
+        return false;
+    }
+
+    // ============================================================
+    // РЕНДЕР КАЛЕНДАРЯ
+    // ============================================================
+    function renderCalendar() {
+        const grid = document.getElementById('calGrid');
+        const bookedSet = getBookedSet(selectedRoom ? selectedRoom.id : null);
+
+        document.getElementById('calTitle').textContent =
+            calMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+
+        const firstDay = new Date(calMonth);
+        const daysInMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+        let startWeekday = firstDay.getDay(); // 0=вс
+        startWeekday = (startWeekday === 0) ? 6 : startWeekday - 1; // Пн=0
+
+        let html = '';
+        for (let i = 0; i < startWeekday; i++) html += '<div class="cal-day empty"></div>';
+
+        const today = todayMid();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const d = new Date(calMonth.getFullYear(), calMonth.getMonth(), day);
+            const blocked = isDateDisabled(d, bookedSet);
+            let cls = 'cal-day';
+            if (blocked === 'past') cls += ' past';
+            if (blocked === 'booked') cls += ' booked';
+            if (dateKey(d) === dateKey(today)) cls += ' today';
+            if (selCheckin && dateKey(d) === dateKey(selCheckin)) cls += ' selected';
+            if (selCheckout && dateKey(d) === dateKey(selCheckout)) cls += ' selected';
+            if (selCheckin && selCheckout && d > selCheckin && d < selCheckout) cls += ' in-range';
+            html += `<div class="${cls}" data-date="${dateKey(d)}">${day}</div>`;
+        }
+        grid.innerHTML = html;
+
+        grid.querySelectorAll('.cal-day:not(.empty)').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const [y, m, dd] = cell.dataset.date.split('-').map(Number);
+                const d = new Date(y, m - 1, dd);
+                handleDateClick(d, bookedSet);
+            });
+        });
+    }
+
+    function handleDateClick(d, bookedSet) {
+        if (isDateDisabled(d, bookedSet)) {
+            showCalHint('⛔ Эта дата недоступна для бронирования (прошла или номер занят).');
+            return;
+        }
+        if (!selCheckin || (selCheckin && selCheckout)) {
+            // начинаем новый выбор
+            selCheckin = d; selCheckout = null;
+        } else if (d <= selCheckin) {
+            selCheckin = d; // переносим заезд
+        } else {
+            // проверяем, что весь диапазон свободен
+            if (rangeHasBlocked(selCheckin, d, bookedSet)) {
+                showCalHint('⛔ Внутри выбранного периода есть занятые даты — бронирование невозможно.');
+                return;
+            }
+            selCheckout = d;
+        }
+        syncDateInputs();
+        renderCalendar();
+    }
+
+    function syncDateInputs() {
+        document.getElementById('bookingCheckin').value = selCheckin ? toDDMMYYYY(selCheckin) : '';
+        document.getElementById('bookingCheckout').value = selCheckout ? toDDMMYYYY(selCheckout) : '';
+        document.getElementById('checkinGroup').classList.remove('error');
+        document.getElementById('checkoutGroup').classList.remove('error');
+    }
+
+    let calHintTimer = null;
+    function showCalHint(text) {
+        const hint = document.querySelector('.cal-hint');
+        hint.innerHTML = '<b style="color:#c0392b;">' + text + '</b>';
+        clearTimeout(calHintTimer);
+        calHintTimer = setTimeout(() => {
+            hint.innerHTML = 'Красные (зачёркнутые) даты — номер уже забронирован (заявка одобрена).<br>Серые даты — прошедшие. Выберите кликом дату заезда, затем дату выезда.';
+        }, 4000);
+    }
+
+    document.getElementById('calPrev').addEventListener('click', () => { calMonth.setMonth(calMonth.getMonth() - 1); renderCalendar(); });
+    document.getElementById('calNext').addEventListener('click', () => { calMonth.setMonth(calMonth.getMonth() + 1); renderCalendar(); });
+
+    // ============================================================
+    // АВТОРИЗАЦИЯ (логин hotel123 / пароль adminHotel)
+    // ============================================================
+    const ADMIN_LOGIN = 'hotel123';
+    const ADMIN_PASSWORD = 'adminHotel';
+
+    function checkAuth() {
+        const role = sessionStorage.getItem('hotel_role') || 'guest';
+        document.getElementById('guest-nav').classList.toggle('hidden', role === 'admin');
+        document.getElementById('admin-nav').classList.toggle('hidden', role !== 'admin');
+        document.getElementById('logout-nav').classList.toggle('hidden', role !== 'admin');
+    }
+
+    document.getElementById('btnLoginAdmin').addEventListener('click', () => {
+        const u = document.getElementById('loginUsername').value.trim();
+        const p = document.getElementById('loginPassword').value.trim();
+        if (u === ADMIN_LOGIN && p === ADMIN_PASSWORD) {
+            sessionStorage.setItem('hotel_role', 'admin');
+            checkAuth();
+            navigateTo('admin');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    });
+
+    document.getElementById('btnLoginGuest').addEventListener('click', () => {
+        sessionStorage.setItem('hotel_role', 'guest');
+        checkAuth();
+        navigateTo('home');
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem('hotel_role');
+        checkAuth();
+        navigateTo('home');
+    });
+
+    // ============================================================
+    // РЕНДЕР НОМЕРОВ
+    // ============================================================
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+    function getRandomRooms(count) { return shuffle([...roomDB]).slice(0, count); }
+
+    function renderRooms(rooms, containerId) {
+        const container = document.getElementById(containerId);
+        if (!rooms.length) {
+            container.innerHTML = `<p style="grid-column:1/-1; text-align:center; padding:40px; font-size:18px; color:#5f7d9a;">Нет номеров, соответствующих фильтрам</p>`;
+            return;
+        }
+        container.innerHTML = rooms.map(room => {
+            const chars = [];
+            if (room.hasTV) chars.push('📺 TV');
+            if (room.hasWiFi) chars.push('📶 Wi-Fi');
+            if (room.hasAC) chars.push('❄️ Кондиционер');
+            chars.push(`📐 ${room.area} м²`);
+            chars.push(`👥 ${room.capacity} места`);
+            return `
+            <div class="room-card">
+                <img src="${room.img}" alt="${room.category}" loading="lazy" onerror="this.src='https://placehold.co/600x400/1e3c5c/white?text=Номер'">
+                <div class="room-body">
+                    <span class="category-badge">${room.category}</span>
+                    <h3>${room.category} №${room.id}</h3>
+                    <div class="price">${room.price.toLocaleString('ru-RU')} ₽ <small>за сутки</small></div>
+                    <div class="chars">${chars.map(c => `<span>${c}</span>`).join('')}</div>
+                    <button class="btn btn-primary book-btn" data-roomid="${room.id}">Забронировать</button>
+                </div>
+            </div>`;
+        }).join('');
+
+        container.querySelectorAll('.book-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const roomId = parseInt(this.dataset.roomid, 10);
+                selectedRoom = roomDB.find(r => r.id === roomId) || null;
+                selCheckin = null; selCheckout = null;
+                calMonth = new Date(); calMonth.setDate(1);
+                navigateTo('booking');
+            });
+        });
+    }
+
+    let selectedRoom = null;
+
+    function renderBookingRoomInfo() {
+        const info = document.getElementById('selectedRoomInfo');
+        if (selectedRoom) {
+            info.innerHTML = `Вы бронируете: <b>${selectedRoom.category} №${selectedRoom.id}</b> — ${selectedRoom.price.toLocaleString('ru-RU')} ₽/сутки (${selectedRoom.capacity} места, ${selectedRoom.area} м²)`;
+            info.style.display = 'block';
+        } else {
+            info.style.display = 'none';
+        }
+        syncDateInputs();
+        renderCalendar();
+    }
+
+    // ============================================================
+    // НАВИГАЦИЯ
+    // ============================================================
+    const pages = {
+        home: document.getElementById('page-home'),
+        catalog: document.getElementById('page-catalog'),
+        booking: document.getElementById('page-booking'),
+        login: document.getElementById('page-login'),
+        admin: document.getElementById('page-admin')
+    };
+    const navLinks = document.querySelectorAll('.nav-links a[data-page]');
+
+    function navigateTo(pageId) {
+        if (pageId === 'admin' && sessionStorage.getItem('hotel_role') !== 'admin') pageId = 'login';
+
+        Object.values(pages).forEach(p => p.style.display = 'none');
+        if (pages[pageId]) pages[pageId].style.display = 'block';
+        navLinks.forEach(link => link.classList.toggle('active', link.dataset.page === pageId));
+
+        if (pageId === 'home') {
+            renderRooms(getRandomRooms(5), 'homeRoomsContainer');
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        if (pageId === 'catalog') {
+            if (filtersApplied) renderRooms(getFilteredRooms(), 'roomsContainer');
+            else renderRooms(getRandomRooms(6), 'roomsContainer');
+        }
+        if (pageId === 'booking') renderBookingRoomInfo();
+        if (pageId === 'admin') renderAdminPanel();
+        window.scrollTo(0, 0);
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            navigateTo(this.dataset.page);
+        });
+    });
+
+    // ============================================================
+    // ФИЛЬТРАЦИЯ
+    // ============================================================
+    let filtersApplied = false;
+
+    function getFilteredRooms() {
+        const cat = document.getElementById('filterCategory').value;
+        const from = parseInt(document.getElementById('filterPriceFrom').value) || 0;
+        const to = parseInt(document.getElementById('filterPriceTo').value) || Infinity;
+        const cap = document.getElementById('filterCapacity').value;
+        return roomDB.filter(room => {
+            if (cat !== 'all' && room.category !== cat) return false;
+            if (room.price < from || room.price > to) return false;
+            if (cap !== 'all' && room.capacity !== parseInt(cap)) return false;
+            return true;
+        });
+    }
+
+    document.getElementById('applyFilterBtn').addEventListener('click', function () {
+        filtersApplied = true;
+        renderRooms(getFilteredRooms(), 'roomsContainer');
+    });
+
+    document.getElementById('resetFilterBtn').addEventListener('click', function () {
+        filtersApplied = false;
+        document.getElementById('filterCategory').value = 'all';
+        document.getElementById('filterPriceFrom').value = '';
+        document.getElementById('filterPriceTo').value = '';
+        document.getElementById('filterCapacity').value = 'all';
+        renderRooms(getRandomRooms(6), 'roomsContainer');
+    });
+
+    // ============================================================
+    // ВАЛИДАЦИЯ И ОТПРАВКА ЗАЯВКИ
+    // ============================================================
+    const form = document.getElementById('bookingForm');
+    const successMsg = document.getElementById('successMessage');
+
+    function validateName(v) { v = v.trim(); return v.length > 0 && /^[А-Яа-яЁё][А-Яа-яЁё\s.\-]*$/.test(v); }
+    function validatePhone(v) { return /^\+7\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(v.trim()); }
+    function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+    function parseDate(value) {
+        const m = String(value).trim().match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+        if (!m) return null;
+        const d = new Date(+m[3], +m[2] - 1, +m[1]);
+        if (d.getFullYear() !== +m[3] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[1]) return null;
+        return d;
+    }
+
+    function setFieldError(groupId, isValid, message) {
+        const group = document.getElementById(groupId);
+        const msgEl = group.querySelector('.error-msg');
+        if (!isValid) { group.classList.add('error'); if (message) msgEl.textContent = message; }
+        else group.classList.remove('error');
+        return isValid;
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('bookingName').value;
+        const surname = document.getElementById('bookingSurname').value;
+        const phone = document.getElementById('bookingPhone').value;
+        const email = document.getElementById('bookingEmail').value;
+        const checkinRaw = document.getElementById('bookingCheckin').value;
+        const checkoutRaw = document.getElementById('bookingCheckout').value;
+
+        const checkin = parseDate(checkinRaw);
+        const checkout = parseDate(checkoutRaw);
+        const today = todayMid();
+
+        let ok = true;
+        ok = setFieldError('nameGroup', validateName(name)) && ok;
+        ok = setFieldError('surnameGroup', validateName(surname)) && ok;
+        ok = setFieldError('phoneGroup', validatePhone(phone)) && ok;
+        ok = setFieldError('emailGroup', validateEmail(email)) && ok;
+        ok = setFieldError('checkinGroup', !!checkin, 'Формат ДД.ММ.ГГГГ') && ok;
+        ok = setFieldError('checkoutGroup', !!checkout, 'Формат ДД.ММ.ГГГГ') && ok;
+
+        // ТРЕБОВАНИЕ: дата заезда не раньше текущей даты
+        if (checkin && checkin < today) {
+            setFieldError('checkinGroup', false, 'Дата заезда не может быть раньше текущей даты');
+            ok = false;
+        }
+        // ТРЕБОВАНИЕ: дата выезда позже даты заезда
+        if (checkin && checkout && checkout <= checkin) {
+            setFieldError('checkoutGroup', false, 'Дата выезда должна быть позже даты заезда');
+            ok = false;
+        }
+        // ТРЕБОВАНИЕ: нельзя бронировать на период с одобренной бронью
+        if (ok && checkin && checkout && selectedRoom) {
+            const bookedSet = getBookedSet(selectedRoom.id);
+            if (rangeHasBlocked(checkin, checkout, bookedSet)) {
+                setFieldError('checkinGroup', false, 'На выбранный период номер уже забронирован (заявка одобрена). Выберите другие даты.');
+                ok = false;
+            }
+        }
+
+        if (ok) {
+            const bookings = JSON.parse(localStorage.getItem('hotel_bookings') || '[]');
+            bookings.push({
+                id: Date.now(),
+                roomId: selectedRoom ? selectedRoom.id : null,
+                room: selectedRoom ? `${selectedRoom.category} №${selectedRoom.id}` : 'Не выбран',
+                name, surname, phone, email,
+                checkin: checkinRaw, checkout: checkoutRaw,
+                status: 'Новая',
+                date: new Date().toLocaleString('ru-RU')
+            });
+            localStorage.setItem('hotel_bookings', JSON.stringify(bookings));
+
+            const roomText = selectedRoom ? ` на номер «${selectedRoom.category} №${selectedRoom.id}»` : '';
+            successMsg.textContent = `✅ Заявка${roomText} успешно отправлена! Ожидает одобрения администратором.`;
+            successMsg.style.display = 'block';
+            successMsg.style.background = '#d4edda';
+            successMsg.style.color = '#0f5c3a';
+            successMsg.style.border = '1px solid #b7dfc9';
+
+            form.reset();
+            selectedRoom = null;
+            selCheckin = null; selCheckout = null;
+            document.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+            renderBookingRoomInfo();
+        } else {
+            successMsg.style.display = 'block';
+            successMsg.textContent = '❌ Пожалуйста, исправьте ошибки в форме.';
+            successMsg.style.background = '#f8d7da';
+            successMsg.style.color = '#721c24';
+            successMsg.style.border = '1px solid #f5c6cb';
+        }
+    });
+
+    document.querySelectorAll('#bookingForm input').forEach(input => {
+        input.addEventListener('input', function () {
+            const group = this.closest('.form-group');
+            if (group) group.classList.remove('error');
+            // синхронизация календаря с ручным вводом дат
+            if (this.id === 'bookingCheckin') { const d = parseDate(this.value); selCheckin = d; if (d && selCheckout && selCheckout <= d) selCheckout = null; renderCalendar(); }
+            if (this.id === 'bookingCheckout') { const d = parseDate(this.value); selCheckout = (d && selCheckin && d > selCheckin) ? d : null; renderCalendar(); }
+        });
+    });
+
+    // ============================================================
+    // АДМИН-ПАНЕЛЬ: одобрение / отклонение / удаление
+    // ============================================================
+    function renderAdminPanel() {
+        const bookings = JSON.parse(localStorage.getItem('hotel_bookings') || '[]');
+        const tbody = document.getElementById('adminBookingsBody');
+        if (bookings.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #5f7d9a;">Заявок пока нет</td></tr>';
+            return;
+        }
+        tbody.innerHTML = bookings.map(b => {
+            let actions = `<button class="btn btn-danger btn-sm" onclick="deleteBooking(${b.id})">Удалить</button>`;
+            if (b.status === 'Новая') {
+                actions = `<button class="btn btn-success btn-sm" onclick="approveBooking(${b.id})">✔ Одобрить</button>
+                           <button class="btn btn-warn btn-sm" onclick="rejectBooking(${b.id})">✖ Отклонить</button>` + actions;
+            }
+            return `
+            <tr>
+                <td>#${String(b.id).slice(-6)}</td>
+                <td><b>${b.room}</b></td>
+                <td>${b.surname} ${b.name}<br><small style="color:#5f7d9a">${b.email}</small></td>
+                <td>${b.phone}</td>
+                <td>${b.checkin} → ${b.checkout}</td>
+                <td><span class="status-badge status-${b.status.toLowerCase()}">${b.status}</span></td>
+                <td><small>${b.date}</small></td>
+                <td>${actions}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function setBookingStatus(id, status) {
+        const bookings = JSON.parse(localStorage.getItem('hotel_bookings') || '[]');
+        const idx = bookings.findIndex(b => b.id === id);
+        if (idx !== -1) {
+            bookings[idx].status = status;
+            localStorage.setItem('hotel_bookings', JSON.stringify(bookings));
+            renderAdminPanel();
+        }
+    }
+
+    window.approveBooking = function (id) { setBookingStatus(id, 'Одобрена'); };   // период станет неактивным в календаре
+    window.rejectBooking = function (id) { setBookingStatus(id, 'Отменена'); };
+    window.deleteBooking = function (id) {
+        if (!confirm('Удалить эту заявку?')) return;
+        let bookings = JSON.parse(localStorage.getItem('hotel_bookings') || '[]');
+        bookings = bookings.filter(b => b.id !== id);
+        localStorage.setItem('hotel_bookings', JSON.stringify(bookings));
+        renderAdminPanel();
+    };
+    window.clearAllBookings = function () {
+        if (!confirm('Удалить ВСЕ заявки? Это действие необратимо.')) return;
+        localStorage.removeItem('hotel_bookings');
+        renderAdminPanel();
+    };
+
+    // ============================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ============================================================
+    checkAuth();
+    navigateTo('home');
+</script>
+
+</body>
+</html>
